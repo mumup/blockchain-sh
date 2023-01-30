@@ -131,14 +131,14 @@ mintAsset() {
 burnAsset() {
     echo "正在燃烧资产...."
     echo "正在获取资产列表...."
-    echo docker exec -it ironfish bash -c "ironfish wallet:balances"
+    docker exec -it ironfish bash -c "ironfish wallet:balances"
     read -p "请输入资产ID:" assetId
     docker exec -it $Container_name bash -c "ironfish wallet:burn --assetId=${assetId} --amount=900 --fee=0.00000001 --confirm"
 }
 
 transferAsset() {
     echo "正在获取资产列表...."
-    echo docker exec -it ironfish bash -c "ironfish wallet:balances"
+    docker exec -it ironfish bash -c "ironfish wallet:balances"
     read -p "请输入资产ID:" assetId
     echo "正在转账资产到官方地址...."
     docker exec -it $Container_name bash -c "ironfish wallet:send --assetId=${assetId} --to dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca --amount 100 --fee 0.00000001 --confirm"
