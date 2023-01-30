@@ -123,22 +123,25 @@ faucet_ironfish() {
 }
 
 mintAsset() {
+    read -p "请输入graffiti:" name
     echo "正在铸造资产...."
-    echo "Mint成功后就是链上资产，可以用于燃烧和转账到官方地址"
-    echo "下方asset name和metadata必须跟账号名字一样"
-    echo "mint amount比例是10000:0.00000001IRON,数值填写10000即可"
-    docker exec -it $Container_name bash -c "ironfish wallet:mint"
-
+    docker exec -it $Container_name bash -c "ironfish wallet:mint --metadata=\"${name}\" --name=${name} --amount=1000 --fee=0.00000001 --confirm"
 }
 
 burnAsset() {
     echo "正在燃烧资产...."
-    docker exec -it $Container_name bash -c "ironfish wallet:burn"
+    echo "正在获取资产列表...."
+    echo docker exec -it ironfish bash -c "ironfish wallet:balances"
+    read -p "请输入资产ID:" assetId
+    docker exec -it $Container_name bash -c "ironfish wallet:burn --assetId=${assetId} --amount=900 --fee=0.00000001 --confirm"
 }
 
 transferAsset() {
+    echo "正在获取资产列表...."
+    echo docker exec -it ironfish bash -c "ironfish wallet:balances"
+    read -p "请输入资产ID:" assetId
     echo "正在转账资产到官方地址...."
-    docker exec -it $Container_name bash -c "ironfish wallet:send --to dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca"
+    docker exec -it $Container_name bash -c "ironfish wallet:send --assetId=${assetId} --to dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca --amount 100 --fee 0.00000001 --confirm"
 }
 
 echo && echo -e " ${Red_font_prefix}IronFish 一键脚本${Font_color_suffix} by \033[1;35mLattice\033[0m
